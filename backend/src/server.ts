@@ -2,10 +2,12 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoUri from "./config/connectDB";
 import mongoose from "mongoose";
+import { userRoutes } from "./routes/user";
+import ErrorHandler from "./utils/utility-class";
 
 dotenv.config();
 const app = express();
-
+app.use(express.json());
 const mongoConnectUri = mongoUri();
 
 mongoose
@@ -24,7 +26,23 @@ app.get("/server-health", (req, res) => {
   res.json({ status: "OK", message: "Server health is fine" });
 });
 
-const port = process.env.PORT || 8000;
+app.use(
+  (
+    err: ErrorHandler,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    res.status(err.statusCode || 500).json({
+      success: false,
+      message: err.message || "Internal Server Error",
+    });
+  }
+);
+
+app.use("/api/v1/users", userRoutes);
+
+const port = process.env.PORT || 9000;
 app.listen(port, () => {
   console.log(`Server is running on ${port}`);
 });
