@@ -27,6 +27,12 @@ const schema = new mongoose.Schema(
       type: String,
       required: [true, "電話番号の入力は必須です"],
     },
+    password: {
+      type: String,
+      required: true,
+      min: 6,
+      max: 64,
+    },
     address: {
       type: String,
       trim: true,
