@@ -2,32 +2,29 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoUri from "./config/connectDB";
 import mongoose from "mongoose";
-import morgan from "morgan";
 
 dotenv.config();
 const app = express();
 
 const mongoConnectUri = mongoUri();
 
-const connectDB = async () => {
-  try {
-    await mongoose.connect(mongoConnectUri);
-    console.log("DBに接続できました");
-  } catch (error) {
-    console.error("DBエラーが発生しました", error);
+mongoose
+  .connect(mongoConnectUri)
+  .then(() => console.log("DBに接続できました"))
+  .catch((err) => {
+    console.error("DBエラーが発生しました", err);
     process.exit(1);
-  }
-};
+  });
 
-connectDB().catch((err) => {
-  console.error("初期データベース接続に失敗しました:", err);
-  process.exit(1);
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to the server" });
 });
 
-app.use(morgan("dev"));
-app.use(express.json());
+app.get("/server-health", (req, res) => {
+  res.json({ status: "OK", message: "Server health is fine" });
+});
 
-const port = process.env.PORT || 9000;
+const port = process.env.PORT || 8000;
 app.listen(port, () => {
   console.log(`Server is running on ${port}`);
 });
