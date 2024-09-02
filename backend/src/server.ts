@@ -26,6 +26,7 @@ app.get("/server-health", (req, res) => {
   res.json({ status: "OK", message: "Server health is fine" });
 });
 
+app.use("/api/v1/users", userRoutes);
 app.use(
   (
     err: ErrorHandler,
@@ -39,8 +40,6 @@ app.use(
     });
   }
 );
-
-app.use("/api/v1/users", userRoutes);
 
 const port = process.env.PORT || 9000;
 app.listen(port, () => {
