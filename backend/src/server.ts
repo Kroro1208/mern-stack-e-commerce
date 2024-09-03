@@ -4,6 +4,7 @@ import mongoUri from "./config/connectDB";
 import mongoose from "mongoose";
 import { userRoutes } from "./routes/user";
 import ErrorHandler from "./utils/utility-class";
+import { productRoutes } from "./routes/product";
 
 dotenv.config();
 const app = express();
@@ -27,6 +28,7 @@ app.get("/server-health", (req, res) => {
 });
 
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/product", productRoutes);
 app.use(
   (
     err: ErrorHandler,
